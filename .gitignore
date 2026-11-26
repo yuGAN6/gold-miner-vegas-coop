@@ -1,0 +1,17 @@
+/mod-work/
+/mod-release/
+/dist/
+/logs/
+*.log
+__pycache__/
+*.pyc
+*.swf
+*.pack
+*.asar
+*.exe
+*.dll
+*.sav
+*.gz
+*.zip
+*.sha256
+vendor/

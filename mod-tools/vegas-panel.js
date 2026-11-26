@@ -4,21 +4,48 @@
   const key='vegas-campaign-coop-v1';
   let settings={mouse:true,out:false,back:false};
   try { settings={...settings,...JSON.parse(localStorage.getItem(key)||'{}')}; } catch {}
+  // The original Vegas host passes the selected game language as ?lang=.
+  // Follow that value rather than the operating-system/browser language.
+  const translations={
+    en:{title:'Mod Tools ▾',mouse:'Mouse aiming',out:'Fast launch',back:'Fast return (super strength)',
+      help:'Campaign / Campaign Endless co-op\nShared money and dynamite\nWASD: left mouse player · S launch / W dynamite\nArrows: right mouse player · ↓ launch / ↑ dynamite\nA / D, ← / →: move / recall your own outgoing claw\nSpeed switches apply to both players',
+      waiting:'Waiting for game…',ready:'Ready · Campaign / Campaign Endless'},
+    zh:{title:'修改工具 ▾',mouse:'鼠标定向抓取',out:'快速出钩',back:'加速回收（超级力量）',
+      help:'剧情战役／战役无尽双人\n金额与炸药共享\nWASD：左键玩家 · S 出钩 / W 炸药\n方向键：右键玩家 · ↓ 出钩 / ↑ 炸药\nA / D、← / →：移动／自己的钩子提前回收\n加速开关同时作用于两人',
+      waiting:'等待游戏加载…',ready:'已启用 · 剧情战役／战役无尽'}
+  };
+  function gameLanguage(){
+    const lang=(new URLSearchParams(location.search).get('lang')||'en').toLowerCase();
+    return /^zh(?:-|$)/.test(lang)?'zh':'en';
+  }
   const style=document.createElement('style');
   style.textContent=`#gm-mod{position:fixed;right:12px;top:12px;z-index:2147483647;font:14px "Microsoft YaHei",sans-serif;color:#f9ecd1;user-select:none}#gm-mod button{background:#382617;color:#ffdc8a;border:1px solid #a98044;border-radius:7px;padding:8px 14px;cursor:pointer;font:inherit;float:right}#gm-mod fieldset{clear:both;background:rgba(28,21,15,.96);border:1px solid #a98044;border-radius:9px;padding:14px 16px;min-width:218px;margin-top:6px;box-shadow:0 6px 24px #0008}#gm-mod label{display:block;margin:9px 0;cursor:pointer}#gm-mod input{accent-color:#e9b64e;margin-right:9px}#gm-mod small{display:block;color:#d0b990;font-size:12px;line-height:1.8}#gm-mod [hidden]{display:none}`;
   document.head.append(style);
   const panel=document.createElement('section');panel.id='gm-mod';
-  panel.innerHTML='<button type="button" aria-expanded="false">修改工具 ▾</button><fieldset hidden><label><input type="checkbox" data-key="mouse">鼠标定向抓取</label><label><input type="checkbox" data-key="out">快速出钩</label><label><input type="checkbox" data-key="back">加速回收（超级力量）</label><small>剧情战役／战役无尽双人<br>金额与炸药共享<br>WASD：左键玩家 · S 出钩 / W 炸药<br>方向键：右键玩家 · ↓ 出钩 / ↑ 炸药<br>A / D、← / →：移动／自己的钩子提前回收<br>加速开关同时作用于两人</small><small id="gm-mod-status">等待游戏加载…</small></fieldset>';
+  panel.innerHTML='<button type="button" aria-expanded="false" data-text="title"></button><fieldset hidden><label><input type="checkbox" data-key="mouse"><span data-text="mouse"></span></label><label><input type="checkbox" data-key="out"><span data-text="out"></span></label><label><input type="checkbox" data-key="back"><span data-text="back"></span></label><small data-text="help" style="white-space:pre-line;max-width:340px"></small><small id="gm-mod-status" role="status"></small></fieldset>';
   document.body.append(panel);
   const button=panel.querySelector('button'),body=panel.querySelector('fieldset');
+  let connected=false,renderedLanguage='',renderedConnected;
+  function renderLanguage(){
+    const language=gameLanguage();
+    if(language===renderedLanguage&&connected===renderedConnected)return;
+    const strings=translations[language];
+    for(const el of panel.querySelectorAll('[data-text]'))el.textContent=strings[el.dataset.text];
+    panel.querySelector('#gm-mod-status').textContent=connected?strings.ready:strings.waiting;
+    panel.lang=language==='zh'?'zh-CN':language;
+    body.setAttribute('aria-label',strings.title.replace(' ▾',''));
+    renderedLanguage=language;renderedConnected=connected;
+  }
+  renderLanguage();
+  window.addEventListener('popstate',renderLanguage);
   button.onclick=()=>{body.hidden=!body.hidden;button.setAttribute('aria-expanded',String(!body.hidden));};
   function apply(){
     window.dispatchEvent(new MessageEvent('message',{data:{type:'gmvegas-in',t:'clickfire',on:false}}));
     const p=document.querySelector('ruffle-player');
-    try {if(p?.ruffle().callExternalInterface('gmSetModifiers',settings.mouse,settings.out,settings.back)===true){
-      panel.querySelector('#gm-mod-status').textContent='已启用 · 剧情战役／战役无尽';return true;
-    }} catch {}
-    return false;
+    connected=false;
+    try {connected=p?.ruffle().callExternalInterface('gmSetModifiers',settings.mouse,settings.out,settings.back)===true;} catch {}
+    renderLanguage();
+    return connected;
   }
   for(const el of panel.querySelectorAll('input')){
     el.checked=!!settings[el.dataset.key];

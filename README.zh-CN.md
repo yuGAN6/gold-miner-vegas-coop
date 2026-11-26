@@ -6,6 +6,7 @@
 
 ## 1. 功能
 
+- 修改栏随游戏语言切换中文／英文，其他语言默认英文。
 - Vegas 剧情战役和战役无尽中加入两名独立控制的矿工。
 - 右上角折叠修改栏：左右鼠标定向、快速出钩、加速回收。
 - 独立提前回收和炸药操作，支持开启加速回收时使用炸药。
@@ -26,13 +27,13 @@
 | 游戏版本 | `0.6.5` |
 | 原始文件 | `resources/vegas/vegas.pack` |
 | 原包 SHA-256 | `82fdc3a1fc61576ab86b571a9d7b8289da3c1a496121c298f7476ab04aed0b9a` |
-| Mod 版本 | `0.2.0` |
+| Mod 版本 | `0.2.1` |
 
 安装器要求原包完全匹配，拒绝其他版本及其他修改。这是独立于[黄金矿工经典版双人 Mod](https://github.com/yuGAN6/gold-miner-solo-coop) 的项目。
 
 ## 4. 安装与卸载
 
-1. 从 [Releases](https://github.com/yuGAN6/gold-miner-vegas-coop/releases) 下载 `GoldMiner-Vegas-Coop-v0.2.0.zip`。
+1. 从 [Releases](https://github.com/yuGAN6/gold-miner-vegas-coop/releases) 下载 `GoldMiner-Vegas-Coop-v0.2.1.zip`。
 2. 关闭游戏，完整解压压缩包。
 3. 运行 `Install.cmd`，必要时选择游戏文件夹。也可以把包含 `Gold Miner Party Rush.exe` 的文件夹拖到 `Install.cmd` 上。
 4. 照常从 Steam 启动，选择**街机 → 战役模式**或**战役无尽**。

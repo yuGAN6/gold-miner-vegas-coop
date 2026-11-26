@@ -1,4 +1,4 @@
-Gold Miner: Party Rush - Vegas Co-op v0.2.0
+Gold Miner: Party Rush - Vegas Co-op v0.2.1
 
 1. Close the game and extract the complete ZIP.
 2. Run Install.cmd. If necessary, select the game folder containing
@@ -9,6 +9,7 @@ Left player: A/D move or recall their own outgoing claw, S launch, W dynamite,
 left mouse to aim. Right player: arrows, right mouse to aim.
 Use the top-right Mod Tools panel for mouse aiming, fast launch and fast return.
 Money, targets, timer, shop and dynamite inventory are shared.
+Panel language follows the game: Chinese or English; other languages use English.
 
 Run Uninstall.cmd with the game closed to restore the verified original pack.
 No Python, Java, Node.js or Flash decompiler is needed to install.

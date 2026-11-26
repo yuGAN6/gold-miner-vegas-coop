@@ -1,4 +1,4 @@
-Gold Miner: Party Rush - Vegas 双人 Mod v0.2.0
+Gold Miner: Party Rush - Vegas 双人 Mod v0.2.1
 
 1. 关闭游戏，完整解压 ZIP。
 2. 双击 Install.cmd，必要时选择包含 Gold Miner Party Rush.exe 的游戏目录。
@@ -9,6 +9,7 @@ Gold Miner: Party Rush - Vegas 双人 Mod v0.2.0
 右侧：方向键操作，鼠标右键定向。
 右上角“修改工具”可设置鼠标定向、快速出钩和加速回收。
 金额、目标、时间、商店和炸药库存共享。
+修改栏随游戏语言显示中文或英文，其他语言默认英文。
 
 关闭游戏后运行 Uninstall.cmd 可恢复经过校验的原包。
 安装不需要 Python、Java、Node.js 或 Flash 反编译工具。

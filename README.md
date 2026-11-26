@@ -6,6 +6,7 @@ Local two-player co-op and optional modifiers for **Arcade → Campaign** and **
 
 ## 1. Features
 
+- Modifier panel follows Chinese/English game language; all other languages use English.
 - Two independently controlled miners in the Vegas campaign and endless campaign.
 - Left/right mouse aiming, fast launch and fast return in a collapsible top-right panel.
 - Independent early recall and dynamite, including when fast return is enabled.
@@ -26,13 +27,13 @@ Local two-player co-op and optional modifiers for **Arcade → Campaign** and **
 | Game version | `0.6.5` |
 | Original file | `resources/vegas/vegas.pack` |
 | Original SHA-256 | `82fdc3a1fc61576ab86b571a9d7b8289da3c1a496121c298f7476ab04aed0b9a` |
-| Mod version | `0.2.0` |
+| Mod version | `0.2.1` |
 
 The installer requires an exact matching original pack. It refuses other builds and other modifications. This project is separate from [Gold Miner Classic Edition co-op](https://github.com/yuGAN6/gold-miner-solo-coop).
 
 ## 4. Install and uninstall
 
-1. Download `GoldMiner-Vegas-Coop-v0.2.0.zip` from [Releases](https://github.com/yuGAN6/gold-miner-vegas-coop/releases).
+1. Download `GoldMiner-Vegas-Coop-v0.2.1.zip` from [Releases](https://github.com/yuGAN6/gold-miner-vegas-coop/releases).
 2. Close the game and extract the entire archive.
 3. Run `Install.cmd`; select the game folder if asked. Alternatively, drag the folder containing `Gold Miner Party Rush.exe` onto `Install.cmd`.
 4. Launch normally from Steam and select **Arcade → Campaign** or **Campaign Endless**.

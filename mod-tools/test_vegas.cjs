@@ -97,6 +97,28 @@ async function mouse(button,x,y){const pt=await js(`(()=>{const r=document.query
     await cdp('Runtime.enable');
     await cdp('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/native/index.html`});
     await until(async()=>{try{return await call('gmTest','loaded',1)>=512;}catch{return false;}},'movie loaded');
+    await until(async()=>await js("document.querySelector('#gm-mod-status')?.textContent.startsWith('Ready')"),'English modifier panel connects');
+    assert.equal(await js("document.querySelector('#gm-mod button').textContent"),'Mod Tools ▾');
+    await settings(true,false);
+    await js("document.querySelector('#gm-mod button').click();history.replaceState(null,'','?lang=zh');window.dispatchEvent(new PopStateEvent('popstate'))");
+    assert.equal(await js("document.querySelector('#gm-mod button').textContent"),'修改工具 ▾');
+    assert.equal(await js("document.querySelector('#gm-mod [data-text=mouse]').textContent"),'鼠标定向抓取');
+    assert.equal(await js("document.querySelector('#gm-mod-status').textContent"),'已启用 · 剧情战役／战役无尽');
+    assert.deepEqual(await js("Array.from(document.querySelectorAll('#gm-mod input')).map(x=>x.checked)"),[true,true,false],'language change preserves switches');
+    assert.equal(await js("document.querySelector('#gm-mod fieldset').hidden"),false,'language change preserves expanded panel');
+    for(const language of ['en','fr','ja','de','unsupported']){
+      await js(`history.replaceState(null,'','?lang=${language}');window.dispatchEvent(new PopStateEvent('popstate'))`);
+      assert.equal(await js("document.querySelector('#gm-mod button').textContent"),'Mod Tools ▾',`${language} uses English`);
+      assert.equal(await js("document.querySelector('#gm-mod [data-text=back]').textContent"),'Fast return (super strength)');
+    }
+    await js("history.replaceState(null,'','?lang=zh-CN')");
+    await until(async()=>await js("document.querySelector('#gm-mod button').textContent==='修改工具 ▾'"),'language polling follows selected Chinese locale');
+    await cdp('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/native/index.html?lang=zh`});
+    await until(async()=>{try{return await call('gmTest','loaded',1)>=512;}catch{return false;}},'Chinese language entry loads movie');
+    assert.equal(await js("document.querySelector('#gm-mod button').textContent"),'修改工具 ▾','fresh Chinese game entry uses Chinese');
+    assert.deepEqual(await js("Array.from(document.querySelectorAll('#gm-mod input')).map(x=>x.checked)"),[true,true,false],'switches persist across language reload');
+    await settings(false,false);
+    console.log('LANGUAGE OK: EN, ZH, ENGLISH FALLBACK, SETTINGS PRESERVED');
     if(process.env.VEGAS_REPRO==='1'){
       await call('gmTest','start',1);await wait(300);await settings(false,false);
       await js("document.querySelector('ruffle-player').focus()");
@@ -285,9 +307,9 @@ async function mouse(button,x,y){const pt=await js(`(()=>{const r=document.query
     }
     console.log('ALL CAMPAIGN SCENES OK',campaignFrames.length);
     await call('gmTest','start',1);await wait(300);
-    await js("document.querySelector('#gm-mod button').click()");
+    await js("history.replaceState(null,'','?lang=en');window.dispatchEvent(new PopStateEvent('popstate'));document.querySelector('#gm-mod button').click()");
     const snap=await cdp('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(root,testMode===2?'mod-work/preview-endless.png':'mod-work/preview.png'),Buffer.from(snap.data,'base64'));
-    fs.writeFileSync(path.join(root,testMode===2?'mod-work/test-results-endless.json':'mod-work/test-results.json'),JSON.stringify({passed:true,mode:testMode,checks:['new-story bonus initialization','undefined time bonus gives 60 seconds','purchased time bonus gives 75 seconds','SWF-injected panel in stock Vegas page','independent mouse aiming and busy lock','second-player shared score','accelerated capture','WASD and arrow keyboard controls','shell-remapped WASD arrows do not move first player','physical arrows do not move second player','input does not end level or corrupt countdown','A/D movement plus shell-forwarded arrows preserve other player outbound shot at normal and fast speeds','A/D and Left/Right independently recall only the corresponding claw','native left/right clicks','W and Up destroy cargo and consume exactly one shared bomb','bomb effect survives accelerated return','second-player bomb icon targets its own cargo','both swimming rings move independently','return speed toggle','outgoing speed toggle','timer waits for second payout','scene exit disables aim','direct first-to-second layout transition preserves co-op','all 55 campaign mining frames retain both players and mouse controls'],campaignFrames,slow,fast,slowOut,fastOut,countdown},null,2));
+    fs.writeFileSync(path.join(root,testMode===2?'mod-work/test-results-endless.json':'mod-work/test-results.json'),JSON.stringify({passed:true,mode:testMode,checks:['Chinese and English modifier labels follow game language; other locales use English; switches and expansion persist','new-story bonus initialization','undefined time bonus gives 60 seconds','purchased time bonus gives 75 seconds','SWF-injected panel in stock Vegas page','independent mouse aiming and busy lock','second-player shared score','accelerated capture','WASD and arrow keyboard controls','shell-remapped WASD arrows do not move first player','physical arrows do not move second player','input does not end level or corrupt countdown','A/D movement plus shell-forwarded arrows preserve other player outbound shot at normal and fast speeds','A/D and Left/Right independently recall only the corresponding claw','native left/right clicks','W and Up destroy cargo and consume exactly one shared bomb','bomb effect survives accelerated return','second-player bomb icon targets its own cargo','both swimming rings move independently','return speed toggle','outgoing speed toggle','timer waits for second payout','scene exit disables aim','direct first-to-second layout transition preserves co-op','all 55 campaign mining frames retain both players and mouse controls'],campaignFrames,slow,fast,slowOut,fastOut,countdown},null,2));
   }catch(e){console.error(e);process.exitCode=1;}
   finally{await closeBrowser();server.close();}
 })();

@@ -17,7 +17,6 @@ def main():
     root.mkdir(parents=True);checks=[];live_sha=sha(a.live_pack) if a.live_pack else None
     def fixture(name):
         game=root/name;(game/'resources/vegas').mkdir(parents=True)
-        (game/'Gold Miner Party Rush.exe').write_bytes(b'fixture - not executed')
         shutil.copy2(a.original,game/'resources/vegas/vegas.pack');return game
     def run(mode,game,pkg=package,ok=True,discover=False):
         cmd=['powershell.exe','-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',str(pkg/'Manage-Mod.ps1'),'-Mode',mode,'-NonInteractive']
@@ -27,7 +26,7 @@ def main():
     game=fixture('游戏副本 with spaces');archive=game/'resources/vegas/vegas.pack'
     backup=game/'resources/vegas/vegas.pack.goldminer-vegas-coop-original'
     run('Install',game);assert sha(archive)==manifest['target']['sha256'] and sha(backup)==manifest['source']['sha256']
-    checks.append('fresh installation produces the exact tested pack and original backup')
+    checks.append('installation without game EXE or Steam metadata produces the exact tested pack and backup')
     run('Install',game);assert sha(archive)==manifest['target']['sha256']
     checks.append('repeated install is idempotent')
     run('Uninstall',game);run('Uninstall',game);assert sha(archive)==manifest['source']['sha256']
@@ -39,7 +38,14 @@ def main():
     checks.append('missing backup refuses uninstall without modifying the pack')
     wrong=fixture('wrong-version');wrong_pack=wrong/'resources/vegas/vegas.pack';wrong_pack.write_bytes(b'wrong version');before=sha(wrong_pack)
     run('Install',wrong,ok=False);assert sha(wrong_pack)==before
-    checks.append('unsupported versions and other modifications are refused')
+    checks.append('mismatched resource content is refused independently of Steam versions')
+    assert not any(k in manifest for k in ('steamAppId','steamBuildId','gameVersion'))
+    metadata=fixture('unrelated-game-metadata')
+    (metadata/'appmanifest_4815320.acf').write_text('unrelated app/build metadata',encoding='utf8')
+    (metadata/'resources/package.json').write_text('{"version":"999.999"}',encoding='utf8')
+    run('Install',metadata)
+    assert sha(metadata/'resources/vegas/vegas.pack')==manifest['target']['sha256']
+    checks.append('unrelated app/build and game-version metadata does not restrict installation')
     damaged=root/'damaged-package';shutil.copytree(package,damaged);(damaged/'payload.gz').write_bytes(b'damaged')
     clean=fixture('damaged-payload');run('Install',clean,pkg=damaged,ok=False)
     assert sha(clean/'resources/vegas/vegas.pack')==manifest['source']['sha256']

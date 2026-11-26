@@ -19,7 +19,7 @@ def main():
     game=a.game_directory.resolve();WORK.mkdir(parents=True,exist_ok=True)
     candidates=[game/'resources/vegas'/n for n in ('vegas.pack.pre-campaign-coop','vegas.pack.goldminer-vegas-coop-original','vegas.pack')]
     source=next((f for f in candidates if f.is_file() and hashlib.sha256(f.read_bytes()).hexdigest()==SOURCE_SHA),None)
-    if source is None:raise RuntimeError('The supported original Vegas pack was not found. Restore this game build first.')
+    if source is None:raise RuntimeError('The source Vegas pack fingerprint was not found. Use a resource pack matching SOURCE_SHA; Steam metadata is not checked.')
     extract(game/'resources/app.asar',WORK/'app')
     unpack="""const fs=require('fs'),path=require('path'),p=require(process.argv[1]);
 const o=p.open(fs.readFileSync(process.argv[2]));

@@ -24,8 +24,7 @@ function Get-HashHex([string]$Path) {
 
 function Test-GameDirectory([string]$Path) {
     if ([string]::IsNullOrWhiteSpace($Path)) { return $false }
-    return ((Test-Path -LiteralPath (Join-Path $Path 'Gold Miner Party Rush.exe') -PathType Leaf) -and
-            (Test-Path -LiteralPath (Join-Path $Path 'resources\vegas\vegas.pack') -PathType Leaf))
+    return (Test-Path -LiteralPath (Join-Path $Path 'resources\vegas\vegas.pack') -PathType Leaf)
 }
 
 function Find-GameDirectory {
@@ -35,36 +34,6 @@ function Find-GameDirectory {
     } | Select-Object -Unique)
     # A package placed in/under the game directory explicitly selects that copy.
     if ($localGames.Count -eq 1) { return $localGames[0] }
-    $steamRoots = @()
-    foreach ($key in @('HKCU:\Software\Valve\Steam', 'HKLM:\SOFTWARE\WOW6432Node\Valve\Steam')) {
-        try {
-            if (Test-Path $key) {
-                $settings = Get-ItemProperty -LiteralPath $key
-                if ($settings.SteamPath) { $steamRoots += $settings.SteamPath }
-                if ($settings.InstallPath) { $steamRoots += $settings.InstallPath }
-            }
-        } catch { continue } # Restricted registry access must not block folder selection.
-    }
-    foreach ($steamRoot in @($steamRoots | Select-Object -Unique)) {
-        $libraries = @($steamRoot)
-        $libraryFile = Join-Path $steamRoot 'steamapps\libraryfolders.vdf'
-        if (Test-Path -LiteralPath $libraryFile) {
-            $content = [IO.File]::ReadAllText($libraryFile)
-            foreach ($match in [regex]::Matches($content, '"path"\s+"((?:\\.|[^"\\])*)"')) {
-                $libraries += $match.Groups[1].Value.Replace('\\', '\')
-            }
-        }
-        foreach ($library in $libraries) {
-            $manifestFile = Join-Path $library 'steamapps\appmanifest_4815320.acf'
-            if (Test-Path -LiteralPath $manifestFile) {
-                $content = [IO.File]::ReadAllText($manifestFile)
-                $match = [regex]::Match($content, '"installdir"\s+"([^"]+)"')
-                if ($match.Success) {
-                    $candidates += Join-Path $library ('steamapps\common\' + $match.Groups[1].Value)
-                }
-            }
-        }
-    }
     $found = @($candidates | Where-Object { Test-GameDirectory $_ } | ForEach-Object {
         [IO.Path]::GetFullPath($_).TrimEnd('\')
     } | Select-Object -Unique)
@@ -72,7 +41,7 @@ function Find-GameDirectory {
     if ($NonInteractive) { throw ('Could not select a unique game installation (matches: ' + $found.Count + '). Use -GameDirectory. Candidates: ' + ($found -join '; ')) }
     Add-Type -AssemblyName System.Windows.Forms
     $picker = New-Object System.Windows.Forms.FolderBrowserDialog
-    $picker.Description = 'Select the Gold Miner game folder containing Gold Miner Party Rush.exe'
+    $picker.Description = 'Select the folder containing resources\vegas\vegas.pack'
     $picker.ShowNewFolderButton = $false
     try {
         if ($picker.ShowDialog() -ne [Windows.Forms.DialogResult]::OK) { throw 'Cancelled. No game files were changed.' }
@@ -96,7 +65,7 @@ try {
     if ($manifest.format -ne 'goldminer-vegas-delta-v1') { throw 'Unsupported patch format.' }
     if (!$GameDirectory) { $GameDirectory = Find-GameDirectory }
     $GameDirectory = [IO.Path]::GetFullPath($GameDirectory.Trim('"'))
-    if (!(Test-GameDirectory $GameDirectory)) { throw 'Select a game folder containing Gold Miner Party Rush.exe and resources\vegas\vegas.pack.' }
+    if (!(Test-GameDirectory $GameDirectory)) { throw 'Select a folder containing resources\vegas\vegas.pack.' }
     $archivePath = Join-Path $GameDirectory 'resources\vegas\vegas.pack'
     $backupPath = Join-Path $GameDirectory 'resources\vegas\vegas.pack.goldminer-vegas-coop-original'
     $currentHash = Get-HashHex $archivePath
@@ -116,7 +85,7 @@ try {
 
     if ($Mode -eq 'Uninstall') {
         if ($currentHash -ne $manifest.target.sha256) {
-            throw 'The game has been updated or modified by another tool. Refusing to replace it with an older original archive.'
+            throw 'The current Vegas pack is not the installed target content. Refusing to restore an unrelated full backup.'
         }
         if (!(Test-Path -LiteralPath $backupPath)) {
             # Recognize the original backup made by the development install.
@@ -136,11 +105,11 @@ try {
     }
 
     if ($currentHash -ne $manifest.source.sha256) {
-        throw ('Unsupported game build or another mod is installed. This patch requires the exact original archive from Steam build ' + $manifest.steamBuildId + '. No game files were changed.')
+        throw 'Vegas pack content does not match the source fingerprint required by this fixed-offset delta. No Steam app/build is checked. No game files were changed.'
     }
-    if ((Get-Item -LiteralPath $archivePath).Length -ne [long]$manifest.source.size) { throw 'Original archive size mismatch.' }
+    if ((Get-Item -LiteralPath $archivePath).Length -ne [long]$manifest.source.size) { throw 'Source resource-pack size mismatch.' }
     if ((Test-Path -LiteralPath $backupPath) -and (Get-HashHex $backupPath) -ne $manifest.source.sha256) {
-        throw 'The existing backup does not match this build. Installation stopped to preserve it.'
+        throw 'The existing backup does not match the required source content. Installation stopped to preserve it.'
     }
     $payloadPath = Join-Path $PSScriptRoot 'payload.gz'
     if ((Get-HashHex $payloadPath) -ne $manifest.payload.sha256) { throw 'Patch data is damaged. Download and extract the complete release again.' }
@@ -180,7 +149,7 @@ try {
     # Both files are in resources on the same volume; replacement is atomic.
     [IO.File]::Replace($stagePath, $archivePath, [System.Management.Automation.Language.NullString]::Value, $true)
     $stagePath = $null
-    Write-Host 'Installed! Launch from Steam and select Arcade > Campaign or Campaign Endless for local co-op.' -ForegroundColor Green
+    Write-Host 'Installed! Start the game normally and select Arcade > Campaign or Campaign Endless for local co-op.' -ForegroundColor Green
     Write-Host 'Left player: WASD + left mouse. Right player: arrows + right mouse. To restore the original, run Uninstall.cmd.'
     exit 0
 } catch {

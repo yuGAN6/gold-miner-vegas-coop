@@ -19,24 +19,22 @@ Local two-player co-op and optional modifiers for **Arcade → Campaign** and **
 
 ## 3. Compatibility
 
-| Requirement | Supported version |
+| Requirement | Value |
 | --- | --- |
-| Platform | Windows; official Steam installation |
-| Game | Gold Miner: Party Rush |
-| Steam app / build | `4815320` / `26941259` |
-| Game version | `0.6.5` |
+| Platform | Windows with built-in PowerShell |
+| Assets | Gold Miner Vegas Flash resources |
 | Original file | `resources/vegas/vegas.pack` |
 | Original SHA-256 | `82fdc3a1fc61576ab86b571a9d7b8289da3c1a496121c298f7476ab04aed0b9a` |
-| Mod version | `0.2.1` |
+| Mod version | `0.2.2` |
 
-The installer requires an exact matching original pack. It refuses other builds and other modifications. This project is separate from [Gold Miner Classic Edition co-op](https://github.com/yuGAN6/gold-miner-solo-coop).
+The installer does not use a Steam app ID, build number, game-version string or game executable name as a compatibility requirement. The retained SHA-256 is a resource-content precondition: this fixed-offset delta must read the expected source bytes. Changes to unrelated files or Steam metadata do not block installation; changes inside the Vegas pack require a matching delta. This project is separate from [Gold Miner Classic Edition co-op](https://github.com/yuGAN6/gold-miner-solo-coop).
 
 ## 4. Install and uninstall
 
-1. Download `GoldMiner-Vegas-Coop-v0.2.1.zip` from [Releases](https://github.com/yuGAN6/gold-miner-vegas-coop/releases).
+1. Download `GoldMiner-Vegas-Coop-v0.2.2.zip` from [Releases](https://github.com/yuGAN6/gold-miner-vegas-coop/releases).
 2. Close the game and extract the entire archive.
-3. Run `Install.cmd`; select the game folder if asked. Alternatively, drag the folder containing `Gold Miner Party Rush.exe` onto `Install.cmd`.
-4. Launch normally from Steam and select **Arcade → Campaign** or **Campaign Endless**.
+3. Run `Install.cmd`; select the game folder if asked. Alternatively, drag the folder containing `resources/vegas/vegas.pack` onto `Install.cmd`.
+4. Launch the game normally and select **Arcade → Campaign** or **Campaign Endless**.
 
 No Python, Java, Node.js or decompiler is needed to install. Uninstall older/different mods before applying this release. To remove this mod, close the game and run `Uninstall.cmd`. The verified original backup is retained beside the Vegas pack. Saves are not modified.
 
@@ -60,10 +58,10 @@ Only `gmvegas_main.swf` inside the Vegas pack is replaced. The release is a copy
 
 ## 7. Development
 
-See [DEVELOPMENT.md](docs/DEVELOPMENT.md) for local extraction, building, browser tests and portable package export. Developers need their own matching game installation, Python, Node.js, Java and FFDec. Generated game assets and work files are Git-ignored. Mod scripts are MIT-licensed; original game content remains the property of its owners.
+See [DEVELOPMENT.md](docs/DEVELOPMENT.md) for local extraction, building, browser tests and portable package export. Developers need their own matching Vegas resource pack, Python, Node.js, Java and FFDec. Generated game assets and work files are Git-ignored. Mod scripts are MIT-licensed; original game content remains the property of its owners.
 
 ## 8. Validation and limitations
 
 Both native modes were tested with the game's bundled Ruffle and original Vegas page: independent controls and recall, shared rewards, dynamite, swimming rings, speed toggles, numeric countdowns, waiting for both payouts, and all **55 mining scene entries** in each mode. These are automated entry/behavior checks, not a claim of a complete playthrough of every random layout.
 
-The portable installer is tested on isolated copies for installation, repeat installation, restoration, wrong versions, corrupt data and failed final validation. See [validation.json](docs/validation.json). Testing on another physical PC remains unverified. Updates and Steam file verification can remove the patch; do not force this release onto a newer build. The old native Vegas two-player menu is not added by this mod. This is an unofficial project, not an official release or an online multiplayer mod.
+The portable installer is tested on isolated copies for installation, repeat installation, restoration, content mismatches, corrupt data and failed final validation. See [validation.json](docs/validation.json). Testing on another physical PC remains unverified. Updates and Steam file verification can remove the patch; a changed Vegas pack requires a new matching delta regardless of the displayed game version. The old native Vegas two-player menu is not added by this mod. This is an unofficial project, not an official release or an online multiplayer mod.

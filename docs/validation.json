@@ -186,14 +186,15 @@
     "countdown": 58
   },
   "portableInstaller": {
-    "passed": 9,
+    "passed": 10,
     "checks": [
-      "fresh installation produces the exact tested pack and original backup",
+      "installation without game EXE or Steam metadata produces the exact tested pack and backup",
       "repeated install is idempotent",
       "uninstall and repeated uninstall restore the exact original",
       "automatic current-directory discovery supports spaces and Unicode",
       "missing backup refuses uninstall without modifying the pack",
-      "unsupported versions and other modifications are refused",
+      "mismatched resource content is refused independently of Steam versions",
+      "unrelated app/build and game-version metadata does not restrict installation",
       "corrupt payload leaves the original pack unchanged",
       "failed final validation cleans staging files and preserves the original",
       "live installed game remains unchanged throughout installer tests"
@@ -204,7 +205,8 @@
     "sha256": "ab2714fe82b40f4fc6b644032df05febc75fd57c488f89554327c3e9a0eaea81"
   },
   "release": {
-    "filename": "GoldMiner-Vegas-Coop-v0.2.1.zip",
-    "sha256": "79d5c9d8eaeffa9189de6ce84d7b40f2962327d3db7506633ea18019f237edd4"
-  }
+    "filename": "GoldMiner-Vegas-Coop-v0.2.2.zip",
+    "sha256": "95688fd7256fa3f1137ab21becb6fabeb80e8ad62bc5f81f9f74cc7a13fbb24d"
+  },
+  "flashContentUnchangedFrom": "0.2.1"
 }

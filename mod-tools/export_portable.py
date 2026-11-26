@@ -57,10 +57,10 @@ def main():
         if op['kind']=='copy':reconstructed.extend(original[op['offset']:op['offset']+n])
         else:reconstructed.extend(literals[literal_offset:literal_offset+n]);literal_offset+=n
     assert reconstructed==updated and literal_offset==len(literals)
-    name='GoldMiner-Vegas-Coop-v0.2.1';dest=args.output/name;dest.mkdir(parents=True,exist_ok=True)
+    name='GoldMiner-Vegas-Coop-v0.2.2';dest=args.output/name;dest.mkdir(parents=True,exist_ok=True)
     payload=dest/'payload.gz';payload.write_bytes(gzip.compress(bytes(literals),compresslevel=9,mtime=0))
-    manifest={'format':'goldminer-vegas-delta-v1','modVersion':'0.2.1','game':'Gold Miner: Party Rush',
-      'steamAppId':4815320,'steamBuildId':'26941259','gameVersion':'0.6.5','targetFile':'resources/vegas/vegas.pack',
+    manifest={'format':'goldminer-vegas-delta-v1','modVersion':'0.2.2','game':'Gold Miner: Party Rush',
+      'targetFile':'resources/vegas/vegas.pack',
       'source':{'size':len(original),'sha256':sha(args.source)},'target':{'size':len(updated),'sha256':sha(args.target)},
       'payload':{'sha256':sha(payload),'uncompressedSize':len(literals)},'modifiedEntries':changed,'operations':operations}
     (dest/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf8')

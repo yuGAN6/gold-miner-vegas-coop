@@ -19,24 +19,22 @@
 
 ## 3. 兼容性
 
-| 要求 | 支持版本 |
+| 要求 | 内容 |
 | --- | --- |
-| 平台 | Windows；官方 Steam 安装 |
-| 游戏 | Gold Miner: Party Rush |
-| Steam app / build | `4815320` / `26941259` |
-| 游戏版本 | `0.6.5` |
+| 平台 | Windows，使用系统自带 PowerShell |
+| 资源 | Gold Miner Vegas Flash 资源 |
 | 原始文件 | `resources/vegas/vegas.pack` |
 | 原包 SHA-256 | `82fdc3a1fc61576ab86b571a9d7b8289da3c1a496121c298f7476ab04aed0b9a` |
-| Mod 版本 | `0.2.1` |
+| Mod 版本 | `0.2.2` |
 
-安装器要求原包完全匹配，拒绝其他版本及其他修改。这是独立于[黄金矿工经典版双人 Mod](https://github.com/yuGAN6/gold-miner-solo-coop) 的项目。
+安装器不以 Steam app、build、游戏版本字符串或游戏 EXE 名称作为兼容条件。保留的 SHA-256 是资源内容前提：固定偏移差分必须读取预期的原始字节。无关文件或 Steam 元信息变化不影响安装；Vegas 包内容改变则需要匹配的新差分。这是独立于[黄金矿工经典版双人 Mod](https://github.com/yuGAN6/gold-miner-solo-coop) 的项目。
 
 ## 4. 安装与卸载
 
-1. 从 [Releases](https://github.com/yuGAN6/gold-miner-vegas-coop/releases) 下载 `GoldMiner-Vegas-Coop-v0.2.1.zip`。
+1. 从 [Releases](https://github.com/yuGAN6/gold-miner-vegas-coop/releases) 下载 `GoldMiner-Vegas-Coop-v0.2.2.zip`。
 2. 关闭游戏，完整解压压缩包。
-3. 运行 `Install.cmd`，必要时选择游戏文件夹。也可以把包含 `Gold Miner Party Rush.exe` 的文件夹拖到 `Install.cmd` 上。
-4. 照常从 Steam 启动，选择**街机 → 战役模式**或**战役无尽**。
+3. 运行 `Install.cmd`，必要时选择游戏文件夹。也可以把包含 `resources/vegas/vegas.pack` 的文件夹拖到 `Install.cmd` 上。
+4. 照常启动游戏，选择**街机 → 战役模式**或**战役无尽**。
 
 安装不需要 Python、Java、Node.js 或反编译工具。安装前请卸载旧版或其他 Mod。关闭游戏后运行 `Uninstall.cmd` 可卸载；经过校验的原始备份保留在 Vegas 包旁边。不修改存档。
 
@@ -60,10 +58,10 @@ Mod 将 Vegas 原生第二人的矿车、抓钩和奖励组件接入战役采矿
 
 ## 7. 开发
 
-本地提取、构建、浏览器测试和便携包导出见 [DEVELOPMENT.md](docs/DEVELOPMENT.md)。开发需要自行持有匹配的游戏，以及 Python、Node.js、Java 和 FFDec。生成的游戏资源和工作文件被 Git 忽略。Mod 脚本采用 MIT 许可，原游戏内容仍属于原权利人。
+本地提取、构建、浏览器测试和便携包导出见 [DEVELOPMENT.md](docs/DEVELOPMENT.md)。开发需要自行持有内容匹配的 Vegas 资源包，以及 Python、Node.js、Java 和 FFDec。生成的游戏资源和工作文件被 Git 忽略。Mod 脚本采用 MIT 许可，原游戏内容仍属于原权利人。
 
 ## 8. 验证与限制
 
 已使用游戏内置 Ruffle 和原版 Vegas 页面分别测试两种模式：独立操作和提前回收、共享收益、炸药、游泳圈、速度开关、正常倒计时、等待两人结算，以及每种模式的全部 **55 个采矿场景入口**。这是入口及行为自动化检查，不代表完整通关所有随机布局。
 
-便携安装器在隔离副本中验证安装、重复安装、恢复、错误版本、损坏数据和最终校验失败，见 [validation.json](docs/validation.json)。尚未在另一台实体电脑上验证。游戏更新和 Steam 文件验证可能覆盖补丁，不要强行安装到新版本。此 Mod 不添加旧 Vegas 原生双人菜单。这是非官方项目，并非官方发行版或在线多人 Mod。
+便携安装器在隔离副本中验证安装、重复安装、恢复、内容不匹配、损坏数据和最终校验失败，见 [validation.json](docs/validation.json)。尚未在另一台实体电脑上验证。游戏更新和 Steam 文件验证可能覆盖补丁，Vegas 包内容改变时需要匹配的新差分，与显示的游戏版本无关。此 Mod 不添加旧 Vegas 原生双人菜单。这是非官方项目，并非官方发行版或在线多人 Mod。

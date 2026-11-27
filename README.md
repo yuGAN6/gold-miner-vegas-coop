@@ -25,13 +25,13 @@ Local two-player co-op and optional modifiers for **Arcade → Campaign** and **
 | Assets | Gold Miner Vegas Flash resources |
 | Original file | `resources/vegas/vegas.pack` |
 | Original SHA-256 | `82fdc3a1fc61576ab86b571a9d7b8289da3c1a496121c298f7476ab04aed0b9a` |
-| Mod version | `0.2.2` |
+| Mod version | `0.2.3` |
 
 The installer does not use a Steam app ID, build number, game-version string or game executable name as a compatibility requirement. The retained SHA-256 is a resource-content precondition: this fixed-offset delta must read the expected source bytes. Changes to unrelated files or Steam metadata do not block installation; changes inside the Vegas pack require a matching delta. This project is separate from [Gold Miner Classic Edition co-op](https://github.com/yuGAN6/gold-miner-solo-coop).
 
 ## 4. Install and uninstall
 
-1. Download `GoldMiner-Vegas-Coop-v0.2.2.zip` from [Releases](https://github.com/yuGAN6/gold-miner-vegas-coop/releases).
+1. Download `GoldMiner-Vegas-Coop-v0.2.3.zip` from [Releases](https://github.com/yuGAN6/gold-miner-vegas-coop/releases).
 2. Close the game and extract the entire archive.
 3. Run `Install.cmd`; select the game folder if asked. Alternatively, drag the folder containing `resources/vegas/vegas.pack` onto `Install.cmd`.
 4. Launch the game normally and select **Arcade → Campaign** or **Campaign Endless**.

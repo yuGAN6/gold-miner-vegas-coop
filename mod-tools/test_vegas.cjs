@@ -153,6 +153,31 @@ async function mouse(button,x,y){const pt=await js(`(()=>{const r=document.query
     await call('gmTest','bonus',2,125);
     await until(async()=>(await sample())[8]===125,'shared score');
     console.log('SHARED SCORE OK');
+    await call('gmTest','start',1);
+    await call('gmTest','jewlLevel',1);
+    await settings(true,true);
+    await wait(350);
+    await call('gmTest','time',1,15);
+    for(const player of [1,2]){
+      const targetX=(await sample(player))[1];
+      await call('gmTest','target',67,targetX);
+      await until(async()=>await call('gmTest','targetProbe',1)==='67|1|jewl2|5','female character is loaded');
+      assert.equal(await call('gmMouseAim',player===2?0:2,targetX,350),true);
+      await until(async()=>String(await call('gmTest','reward',player)).startsWith('$'),'character reward shown');
+      assert.equal(await call('gmTest','reward',player),'$1000',`player ${player}: numeric reward`);
+      await until(async()=>(await sample())[8]===89000+1000*player,`player ${player}: exactly $1000 added`);
+    }
+    await call('gmTest','time',1,1);
+    await until(async()=>(await call('gmTest','levelState',1)).endsWith('|pass'),'rewards allow level to pass');
+    await until(async()=>(await call('gmTest','levelState',1)).endsWith('|shop'),'native shop after passing');
+    await until(async()=>{
+      await call('gmTest','shopNext',1);
+      return (await call('gmTest','levelState',1)).endsWith('|level');
+    },'next level after shop');
+    const [world,level,balance,goal]=(await call('gmTest','levelState',1)).split('|').map(Number);
+    assert.deepEqual([world,level,balance],[3,6,91000]);
+    assert.ok(Number.isFinite(goal)&&goal>90500,`next level target carries over: ${goal}`);
+    console.log('JEWL2 OK: both players, balance',balance,'next target',goal);
     await call('gmTest','start',1);await wait(500);
     console.log('TARGET',await call('gmTest','target',1,280));
     await settings(true,true);

@@ -1,4 +1,4 @@
-Gold Miner: Party Rush - Vegas 双人 Mod v0.2.2
+Gold Miner: Party Rush - Vegas 双人 Mod v0.2.3
 
 1. 关闭游戏，完整解压 ZIP。
 2. 双击 Install.cmd，必要时选择包含 resources/vegas/vegas.pack 的目录。

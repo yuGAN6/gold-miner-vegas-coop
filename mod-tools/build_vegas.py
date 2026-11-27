@@ -85,6 +85,14 @@ def main():
     for p in (src/'DefineSprite_3345').rglob('*.as'):
         s=p.read_text(encoding='utf8')
         new=s
+        if p.parent.name == 'frame_3' and p.name == 'DoAction.as':
+            # Only the primary bonus timeline has a jewl2 animation. In
+            # campaign, send player two's native $1000 through the cash path.
+            original='gotoAndStop("jewl2");\n   play();'
+            assert new.count(original) == 1
+            new=new.replace(original,
+                            'if(_root.gmCampaign())\n   {\n      bscore = 1000;\n   }'
+                            '\n   else\n   {\n      gotoAndStop("jewl2");\n      play();\n   }')
         for name in ('score','stick'):
             new=new.replace(f'"/:{name}2"',f'(_root.gameMode != 3 ? "/:{name}" : "/:{name}2")')
         if new!=s:write(p.relative_to(src),new)

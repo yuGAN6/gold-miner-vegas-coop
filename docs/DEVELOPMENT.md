@@ -30,7 +30,7 @@ Use the verified original pack, not a modded pack, as the source. The repacker l
 $vegasOriginal = 'D:\SteamLibrary\steamapps\common\Gold Miner Together\resources\vegas\vegas.pack.pre-campaign-coop'
 node mod-tools/pack_vegas.cjs $vegasOriginal mod-work/vegas-coop.pack
 python mod-tools/export_portable.py --source $vegasOriginal --target mod-work/vegas-coop.pack --pack-module mod-work/app/vegas-pack.js --output dist
-python mod-tools/test_portable.py --package dist/GoldMiner-Vegas-Coop-v0.2.2 --original $vegasOriginal
+python mod-tools/test_portable.py --package dist/GoldMiner-Vegas-Coop-v0.2.3 --original $vegasOriginal
 ```
 
 The exporter compares encrypted entry ranges, copying all unchanged ciphertext from the original and carrying only the changed movie and pack header/table. It independently reconstructs and compares every byte before emitting the delta. The portable installer verifies source, payload, generated output and backup hashes; replacement happens only after successful validation.
@@ -42,7 +42,7 @@ Steam app/build identifiers and game-version strings are not installation requir
 Keep game assets, extracted launchers, decoders, keys, saves, generated packs and test profiles out of Git. The release contains only the delta, manifest, installer and user instructions. Review `git ls-files`, then audit both tracked files and decompressed release data:
 
 ```powershell
-node mod-tools/audit_publication.cjs mod-work/app/vegas-pack.js dist/GoldMiner-Vegas-Coop-v0.2.2/payload.gz
+node mod-tools/audit_publication.cjs mod-work/app/vegas-pack.js dist/GoldMiner-Vegas-Coop-v0.2.3/payload.gz
 ```
 
 Do not copy the ignored `mod-work/` directory into a release. Update the version, compatibility fingerprint and English/Chinese documentation together for a new release. Automated scene entry and behavior tests do not replace a full campaign playthrough or testing on another physical computer.

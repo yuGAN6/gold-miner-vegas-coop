@@ -1,4 +1,4 @@
-Gold Miner: Party Rush - Vegas Co-op v0.2.2
+Gold Miner: Party Rush - Vegas Co-op v0.2.3
 
 1. Close the game and extract the complete ZIP.
 2. Run Install.cmd. If necessary, select the folder containing

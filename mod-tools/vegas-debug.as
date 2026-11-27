@@ -53,6 +53,17 @@ function gmTest(cmd,n,value)
    }
    if(cmd == "sample") return [_root._currentframe,cart._x,cart._y,cart.C._currentframe,cl._currentframe,cl._rotation,cl.up,cl.weight,_root.score,_root.bonus2._currentframe,_root.gmFastOut,_root.gmFastReturn].join("|");
    if(cmd == "bonus") { _root.bonus2.bscore=Number(value); _root.bonus2.gotoAndPlay(2); return true; }
+   if(cmd == "jewlLevel")
+   {
+      _root.world=3; _root.level=5; _root.goal=90500; _root.score=89000;
+      _root.goalChanger=0.4; _root.goalChangerMax=0.44;
+      _root.goalChangerAddOn=0.01; _root.goalOverPersent=0.38;
+      _root.gotoAndStop("L3-5");
+      return _root._currentframe;
+   }
+   if(cmd == "reward") return (n == 2 ? _root.bonus2 : _root.bonus).bscoreDis;
+   if(cmd == "levelState") return [_root.world,_root.level,_root.score,_root.goal,_root.gmtSceneName].join("|");
+   if(cmd == "shopNext") { _root.gmtShopNext(); return true; }
    if(cmd == "return") {cl.weight=9;cl.objectN=1;cl.price=100;cl.gotoAndStop(200);return true;}
    if(cmd == "time") {_root.timerMov.time=Number(value);return true;}
    if(cmd == "goto") {_root.gotoAndStop(Number(value));return true;}
@@ -60,9 +71,10 @@ function gmTest(cmd,n,value)
    if(cmd == "target")
    {
       _root.things=1;
-      _root.T1._x=Number(value);_root.T1._y=350;_root.T1.gotoAndStop(3);
+      _root.T1._x=Number(value);_root.T1._y=350;_root.T1.gotoAndStop(n == 67 ? 67 : 3);
       _root.T1.T.gotoAndStop(1);
-      return [_root.T1._currentframe,_root.T1.T._currentframe,_root.T1.T.ob.price,_root.T1.T.ob.weight].join("|");
+      cmd = "targetProbe";
    }
+   if(cmd == "targetProbe") return [_root.T1._currentframe,_root.T1.T._currentframe,_root.T1.T.ob.price,_root.T1.T.ob.weight].join("|");
 }
 flash.external.ExternalInterface.addCallback("gmTest",_root,gmTest);

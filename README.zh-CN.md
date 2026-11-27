@@ -25,13 +25,13 @@
 | 资源 | Gold Miner Vegas Flash 资源 |
 | 原始文件 | `resources/vegas/vegas.pack` |
 | 原包 SHA-256 | `82fdc3a1fc61576ab86b571a9d7b8289da3c1a496121c298f7476ab04aed0b9a` |
-| Mod 版本 | `0.2.2` |
+| Mod 版本 | `0.2.3` |
 
 安装器不以 Steam app、build、游戏版本字符串或游戏 EXE 名称作为兼容条件。保留的 SHA-256 是资源内容前提：固定偏移差分必须读取预期的原始字节。无关文件或 Steam 元信息变化不影响安装；Vegas 包内容改变则需要匹配的新差分。这是独立于[黄金矿工经典版双人 Mod](https://github.com/yuGAN6/gold-miner-solo-coop) 的项目。
 
 ## 4. 安装与卸载
 
-1. 从 [Releases](https://github.com/yuGAN6/gold-miner-vegas-coop/releases) 下载 `GoldMiner-Vegas-Coop-v0.2.2.zip`。
+1. 从 [Releases](https://github.com/yuGAN6/gold-miner-vegas-coop/releases) 下载 `GoldMiner-Vegas-Coop-v0.2.3.zip`。
 2. 关闭游戏，完整解压压缩包。
 3. 运行 `Install.cmd`，必要时选择游戏文件夹。也可以把包含 `resources/vegas/vegas.pack` 的文件夹拖到 `Install.cmd` 上。
 4. 照常启动游戏，选择**街机 → 战役模式**或**战役无尽**。
